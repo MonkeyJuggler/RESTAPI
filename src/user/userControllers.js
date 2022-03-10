@@ -23,6 +23,7 @@ exports.login = async (req, res) => {
 }
 exports.updatePassword = async (req, res) => {
     try {
+        const updatedUser = await User.updateOne
         req.user
         req.body.password
     } catch (error) {
@@ -30,6 +31,24 @@ exports.updatePassword = async (req, res) => {
         res.status(500).send({ err: error.message });
     }
 };
+
+export.deleteUser = async (req, res) => {
+    try {
+        let result;
+        if (req.user.username === req.params.username) {
+            result = await User.deleteOne({ username: req.user.username });
+        }
+        if (result && result.deletedCount > 0) {
+            res.status(200).send({ msg: "User deleted"});
+            else {
+                throw new Error("Nothing deleted");
+            }
+        }   catch (error) {
+            console.log(error);
+            res.status(500).send({ err: error.message });
+        }
+    }
+}
 
 
 exports.decrypPassword = async (req, res, next) => {
